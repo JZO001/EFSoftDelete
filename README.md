@@ -17,7 +17,8 @@ This is the implementation of the interceptor, which maintain the IsDeleted flag
         {
         }
 
-        public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
+        public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, 
+            InterceptionResult<int> result)
         {
             HandleDeletedEntities(eventData.Context!);
             return result;
