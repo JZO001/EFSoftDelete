@@ -1,13 +1,14 @@
-﻿using EFSoftDelete.Models;
+﻿using EFSoftDelete.Infrastructure.Persistence.Configurations;
+using EFSoftDelete.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EFSoftDelete.Infrastructure.Persistence
 {
 
-    public sealed class ApplicationDbContext : DbContext
+    public class AuditReaderDbContext : DbContext
     {
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> option) : base(option)
+        public AuditReaderDbContext(DbContextOptions<AuditReaderDbContext> option) : base(option)
         {
         }
 
@@ -16,7 +17,7 @@ namespace EFSoftDelete.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+            modelBuilder.ApplyConfiguration(new UserDbConfig(false));
         }
 
     }

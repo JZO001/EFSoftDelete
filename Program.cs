@@ -23,6 +23,11 @@ namespace EFSoftDelete
                         options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
                         options.AddInterceptors(new EntityDeleteInterceptor());
                     });
+
+                    services.AddDbContext<AuditReaderDbContext>(options =>
+                    {
+                        options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+                    });
                 })
                 .Build();
 
@@ -37,6 +42,8 @@ namespace EFSoftDelete
             await DeleteUser(host, userId);
 
             await QueryUser(host, userId);
+
+            await QueryUserForAudit(host, userId);
         }
 
         static async Task<Guid> CreateUser(IHost host)
@@ -69,7 +76,16 @@ namespace EFSoftDelete
             User? user = await context.Users.FindAsync(userId);
 
             if (user == null) Console.WriteLine($"User with id {userId} has not found as expected.");
+        }
 
+        static async Task QueryUserForAudit(IHost host, Guid userId)
+        {
+            using IServiceScope scope = host.Services.CreateScope();
+            using AuditReaderDbContext context = scope.ServiceProvider.GetRequiredService<AuditReaderDbContext>();
+
+            User? user = await context.Users.FindAsync(userId);
+
+            if (user != null) Console.WriteLine($"User with id {userId} has found as expected.");
         }
 
     }

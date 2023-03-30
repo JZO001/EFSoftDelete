@@ -8,6 +8,17 @@ namespace EFSoftDelete.Infrastructure.Persistence.Configurations
     public class UserDbConfig : IEntityTypeConfiguration<User>
     {
 
+        private readonly bool _useAuditQueryFilter = true;
+
+        public UserDbConfig()
+        {
+        }
+
+        public UserDbConfig(bool useAuditQueryFilter)
+        {
+            _useAuditQueryFilter = useAuditQueryFilter;
+        }
+
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.ToTable("Users");
@@ -19,7 +30,7 @@ namespace EFSoftDelete.Infrastructure.Persistence.Configurations
 
             builder.Property(x => x.Age).IsRequired();
 
-            builder.HasQueryFilter(x => !x.IsDeleted);
+            if (_useAuditQueryFilter) builder.HasQueryFilter(x => !x.IsDeleted);
         }
 
     }
