@@ -1,0 +1,2 @@
+# EFSoftDelete
+EntityFrameworkCore soft delete implementation with SaveChangesInterceptor
